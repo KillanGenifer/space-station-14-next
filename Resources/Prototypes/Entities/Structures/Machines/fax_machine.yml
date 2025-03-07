@@ -34,6 +34,7 @@
     interfaces:
       enum.FaxUiKey.Key:
         type: FaxBoundUi
+  - type: StationAiWhitelist
   - type: ApcPowerReceiver
     powerLoad: 250
   - type: Faxecute
@@ -83,7 +84,7 @@
   - type: FaxMachine
     name: "Central Command"
     notifyAdmins: true
-    receiveStationGoal: true # Corvax-StationGoal
+    receiveAllStationGoals: true # Corvax-StationGoal
 
 - type: entity
   parent: FaxMachineBase

@@ -22,8 +22,10 @@
     tags:
     - DoorBumpOpener
     - WhitelistChameleon
+    - WhitelistChameleonIdCard
   - type: StealTarget
     stealGroup: IDCard
+  - type: NanoChatCard # Corvax-Next-PDAChat
 
 #IDs with layers
 
@@ -116,6 +118,7 @@
     tags:
     - DoorBumpOpener
     - WhitelistChameleon
+    - WhitelistChameleonIdCard
     - HighRiskItem
   - type: StealTarget
     stealGroup: CaptainIDCard
@@ -314,6 +317,9 @@
     - type: PresetIdCard
       job: Bartender
       name: Pun Pun
+    - type: Tag #  Ignore Chameleon tags
+      tags:
+      - DoorBumpOpener
 
 - type: entity
   parent: IDCardStandard
@@ -443,7 +449,7 @@
     - state: default
     - state: idvisitor
   - type: IdCard
-    jobTitle: Visitor
+    jobTitle: job-title-visitor
     jobIcon: JobIconVisitor
   - type: PresetIdCard
     job: Visitor
@@ -457,6 +463,8 @@
     layers:
     - state: default
     - state: idbrigmedic
+  - type: PresetIdCard # Corvax-Next-Brigmedic
+    job: Brigmedic # Corvax-Next-Brigmedic
 
 - type: entity
   parent: IDCardStandard
@@ -599,6 +607,7 @@
   - type: ChameleonClothing
     slot: [idcard]
     default: PassengerIDCard
+    requireTag: WhitelistChameleonIdCard
   - type: UserInterface
     interfaces:
       enum.AgentIDCardUiKey.Key:
@@ -610,9 +619,9 @@
     entries:
     - label: corvax-hidden-desc-AgentIDCard-syndicate
       whitelistMind:
-        components:
-          - TraitorRole
-          - NukeOperative
+        mindRoles:
+        - TraitorRole
+        - NukeopsRole
     - label: corvax-hidden-desc-AgentIDCard-research
       jobRequired:
         - ResearchAssistant
@@ -756,7 +765,7 @@
     - state: default
     - state: idcluwne
   - type: IdCard
-    jobTitle: Cluwne
+    jobTitle: job-title-cluwne
   - type: Unremoveable
 
 - type: entity
@@ -816,7 +825,7 @@
   - type: Item
     heldPrefix: green
   - type: IdCard
-    jobTitle: Universal
+    jobTitle: job-title-universal
     jobIcon: JobIconAdmin
   - type: Access
     groups:
@@ -825,3 +834,9 @@
     - CentralCommand
     - NuclearOperative
     - SyndicateAgent
+    - Wizard
+  - type: NanoChatCard # Corvax-Next-PDAChat
+    notificationsMuted: true
+  - type: Tag #  Ignore Chameleon tags
+    tags:
+    - DoorBumpOpener

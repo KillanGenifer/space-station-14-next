@@ -1,5 +1,7 @@
 using Content.Server.Objectives.Components;
 using Content.Server.Objectives.Components.Targets;
+using Content.Shared.CartridgeLoader;
+using Content.Shared.Interaction;
 using Content.Shared.Mind;
 using Content.Shared.Objectives.Components;
 using Content.Shared.Objectives.Systems;
@@ -11,6 +13,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
+using Content.Shared.Silicons.StationAi;
 
 namespace Content.Server.Objectives.Systems;
 
@@ -20,10 +23,14 @@ public sealed class StealConditionSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedObjectivesSystem _objectives = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     private EntityQuery<ContainerManagerComponent> _containerQuery;
+
+    private HashSet<Entity<TransformComponent>> _nearestEnts = new();
+    private HashSet<EntityUid> _countedItems = new();
 
     public override void Initialize()
     {
@@ -99,18 +106,24 @@ public sealed class StealConditionSystem : EntitySystem
         var containerStack = new Stack<ContainerManagerComponent>();
         var count = 0;
 
+        _countedItems.Clear();
+
         //check stealAreas
         if (condition.CheckStealAreas)
         {
-            var areasQuery = AllEntityQuery<StealAreaComponent>();
-            while (areasQuery.MoveNext(out var uid, out var area))
+            var areasQuery = AllEntityQuery<StealAreaComponent, TransformComponent>();
+            while (areasQuery.MoveNext(out var uid, out var area, out var xform))
             {
                 if (!area.Owners.Contains(mind.Owner))
                     continue;
 
-                var nearestEnt = _lookup.GetEntitiesInRange(uid, area.Range);
-                foreach (var ent in nearestEnt)
+                _nearestEnts.Clear();
+                _lookup.GetEntitiesInRange<TransformComponent>(xform.Coordinates, area.Range, _nearestEnts);
+                foreach (var ent in _nearestEnts)
                 {
+                    if (!_interaction.InRangeUnobstructed((uid, xform), (ent, ent.Comp), range: area.Range))
+                        continue;
+
                     CheckEntity(ent, condition, ref containerStack, ref count);
                 }
             }
@@ -165,11 +178,19 @@ public sealed class StealConditionSystem : EntitySystem
 
     private int CheckStealTarget(EntityUid entity, StealConditionComponent condition)
     {
+        if (_countedItems.Contains(entity))
+            return 0;
+
         // check if this is the target
         if (!TryComp<StealTargetComponent>(entity, out var target))
             return 0;
 
         if (target.StealGroup != condition.StealGroup)
+            return 0;
+
+        // check if cartridge is installed
+        if (TryComp<CartridgeComponent>(entity, out var cartridge) &&
+            cartridge.InstallationStatus is not InstallationStatus.Cartridge)
             return 0;
 
         // check if needed target alive
@@ -181,6 +202,15 @@ public sealed class StealConditionSystem : EntitySystem
                     return 0;
             }
         }
+
+        // Corvax-Next-Api-Start
+        if (condition.CheckHasAi)
+            if (TryComp<StationAiHolderComponent>(entity, out var holder))
+                if (holder.Slot.Item is null)
+                    return 0;
+        // Corvax-Next-Api-End
+
+        _countedItems.Add(entity);
 
         return TryComp<StackComponent>(entity, out var stack) ? stack.Count : 1;
     }
