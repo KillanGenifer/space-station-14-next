@@ -96,6 +96,7 @@
         layer:
         - MobLayer
   - type: FloorOcclusion
+  - type: Mood
   - type: RangedDamageSound
     soundGroups:
       Brute:
@@ -183,12 +184,12 @@
   - type: Stripping
   - type: UserInterface
     interfaces:
-      enum.VoiceMaskUIKey.Key:
-        type: VoiceMaskBoundUserInterface
       enum.HumanoidMarkingModifierKey.Key:
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+      enum.SurgeryUIKey.Key: # _CorvaxNext: surgery
+        type: SurgeryBui
   - type: Puller
   - type: Speech
     speechSounds: Alto
@@ -213,6 +214,10 @@
     - FootstepSound
     - DoorBumpOpener
     - AnomalyHost
+  - type: Targeting # _CorvaxNext: surgery
+  - type: SurgeryTarget # _CorvaxNext: surgery
+  - type: LayingDown # _CorvaxNext: LayingDown Laying Down
+  - type: AutoCryoSleepable # Corvax-Next-AutoCryo
 
 - type: entity
   save: false
@@ -225,6 +230,8 @@
   id: BaseMobSpeciesOrganic
   abstract: true
   components:
+  - type: Targeting # _CorvaxNext: surgery
+  - type: OfferItem # Corvax-Next-Offer
   - type: Barotrauma
     damage:
       types:
@@ -281,6 +288,7 @@
         Asphyxiation: -1.0
   - type: FireVisuals
     alternateState: Standing
+  - type: FootprintOwner # Corvax-Next-Footprints
 
 - type: entity
   save: false
