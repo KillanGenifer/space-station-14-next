@@ -88,6 +88,7 @@
     radius: 1.1 #smallest possible
     color: orange
   - type: ItemTogglePointLight
+<<<<<<< HEAD
   - type: Cautery # _CorvaxNext
     speed: 0.45
   - type: SurgeryTool # _CorvaxNext
@@ -95,6 +96,9 @@
       collection: lighterOnSounds
     endSound:
       collection: lighterOffSounds
+=======
+  - type: PhysicalComposition
+>>>>>>> upstream-next/master
 
 - type: entity
   name: cheap lighter
