@@ -38,8 +38,15 @@ preload_grids = false
 [admin]
 see_own_notes = true
 
+<<<<<<< HEAD
 [net]
 tickrate = 20
 
 #[lavaland] # Lavaland Change
 #enabled = false
+=======
+[ic]
+random_characters = true
+random_species_weights = ""
+ssd_sleep_time = 3600
+>>>>>>> upstream-next/master

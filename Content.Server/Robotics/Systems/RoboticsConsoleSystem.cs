@@ -1,5 +1,4 @@
 using Content.Server.Administration.Logs;
-using Content.Server.DeviceNetwork;
 using Content.Server.DeviceNetwork.Systems;
 using Content.Server.Radio.EntitySystems;
 using Content.Shared.Lock;
@@ -10,9 +9,13 @@ using Content.Shared.Robotics.Components;
 using Content.Shared.Robotics.Systems;
 using Robust.Server.GameObjects;
 using Robust.Shared.Timing;
+<<<<<<< HEAD
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Containers.ItemSlots;
 using Robust.Shared.Containers;
+=======
+using Content.Shared.DeviceNetwork.Events;
+>>>>>>> upstream-next/master
 
 namespace Content.Server.Research.Systems;
 

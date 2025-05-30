@@ -34,6 +34,7 @@ public sealed partial class RCDComponent : Component
     public ProtoId<RCDPrototype> ProtoId { get; set; } = "Invalid";
 
     /// <summary>
+<<<<<<< HEAD
     /// A cached copy of currently selected RCD prototype
     /// </summary>
     /// <remarks>
@@ -55,15 +56,14 @@ public sealed partial class RCDComponent : Component
     public bool IsRpd { get; set; } = false;
 
     /// <summary>
+=======
+>>>>>>> upstream-next/master
     /// The direction constructed entities will face upon spawning
     /// </summary>
     [DataField, AutoNetworkedField]
     public Direction ConstructionDirection
     {
-        get
-        {
-            return _constructionDirection;
-        }
+        get => _constructionDirection;
         set
         {
             _constructionDirection = value;
@@ -80,5 +80,5 @@ public sealed partial class RCDComponent : Component
     /// Contains no position data
     /// </remarks>
     [ViewVariables(VVAccess.ReadOnly)]
-    public Transform ConstructionTransform { get; private set; } = default!;
+    public Transform ConstructionTransform { get; private set; }
 }

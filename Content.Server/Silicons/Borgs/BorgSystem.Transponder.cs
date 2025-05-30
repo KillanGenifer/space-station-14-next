@@ -1,9 +1,9 @@
 using Content.Shared.DeviceNetwork;
-using Content.Shared.Emag.Components;
 using Content.Shared.Movement.Components;
 using Content.Shared.Popups;
 using Content.Shared.Robotics;
 using Content.Shared.Silicons.Borgs.Components;
+<<<<<<< HEAD
 using Content.Server.DeviceNetwork;
 using Content.Server.DeviceNetwork.Components;
 using Content.Server.DeviceNetwork.Systems;
@@ -11,6 +11,10 @@ using Content.Server.Explosion.Components;
 using Content.Server.Silicons.Laws;
 using Robust.Shared.Audio;
 using Content.Shared.Silicons.Laws.Components;
+=======
+using Content.Shared.DeviceNetwork.Components;
+using Content.Shared.DeviceNetwork.Events;
+>>>>>>> upstream-next/master
 using Content.Shared.Emag.Systems;
 using Robust.Shared.Utility;
 using Content.Shared._CorvaxNext.Silicons.Borgs.Components;

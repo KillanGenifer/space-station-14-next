@@ -126,6 +126,11 @@ namespace Content.IntegrationTests.Tests
             "Elkridge",
             "Convex",
             "Relic",
+<<<<<<< HEAD
+=======
+            "dm01-entryway"
+
+>>>>>>> upstream-next/master
         };
 
         /// <summary>

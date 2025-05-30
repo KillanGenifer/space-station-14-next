@@ -17,3 +17,7 @@
 # TTS
 
 /Content.*/Corvax/TTS @Morb0
+/Resources/Maps/** @Ko4ergaPunk
+
+# Sprites
+/Resources/Textures/** @SonicHDC

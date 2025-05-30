@@ -18,7 +18,10 @@ public sealed partial class PendingZombieComponent : Component
         DamageDict = new ()
         {
             { "Poison", 0.4 },
+<<<<<<< HEAD
             { "Cellular", 0.2 },
+=======
+>>>>>>> upstream-next/master
         }
     };
 

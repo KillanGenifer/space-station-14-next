@@ -105,23 +105,30 @@ namespace Content.Server.Body.Commands
             else
                 slotId = $"{part.GetHashCode().ToString()}";
 
+<<<<<<< HEAD
             part.SlotId = part.GetHashCode().ToString();
             // Shitmed Change End
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (body.RootContainer.ContainedEntity != null)
+=======
+            if (body.RootContainer.ContainedEntity is null && !bodySystem.AttachPartToRoot(bodyId, partUid.Value, body, part))
+>>>>>>> upstream-next/master
             {
-                bodySystem.AttachPartToRoot(bodyId, partUid.Value, body, part);
-            }
-            else
-            {
-                var (rootPartId, rootPart) = bodySystem.GetRootPartOrNull(bodyId, body)!.Value;
-                if (!bodySystem.TryCreatePartSlotAndAttach(rootPartId, slotId, partUid.Value, part.PartType, rootPart, part))
-                {
-                    shell.WriteError($"Could not create slot {slotId} on entity {_entManager.ToPrettyString(bodyId)}");
-                    return;
-                }
+                shell.WriteError("Body container does not have a root entity to attach to the body part!");
+                return;
             }
 
+            var (rootPartId, rootPart) = bodySystem.GetRootPartOrNull(bodyId, body)!.Value;
+            if (!bodySystem.TryCreatePartSlotAndAttach(rootPartId,
+                    slotId,
+                    partUid.Value,
+                    part.PartType,
+                    rootPart,
+                    part))
+            {
+                shell.WriteError($"Could not create slot {slotId} on entity {_entManager.ToPrettyString(bodyId)}");
+                return;
+            }
             shell.WriteLine($"Attached part {_entManager.ToPrettyString(partUid.Value)} to {_entManager.ToPrettyString(bodyId)}");
         }
     }

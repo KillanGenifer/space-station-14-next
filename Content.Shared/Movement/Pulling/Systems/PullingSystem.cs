@@ -14,11 +14,16 @@ using Content.Shared.Database;
 using Content.Shared.Effects; // Goobstation
 using Content.Shared.Gravity;
 using Content.Shared.Hands;
+using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Interaction;
+<<<<<<< HEAD
 using Content.Shared.Inventory.VirtualItem; // Goobstation
+=======
+using Content.Shared.Inventory.VirtualItem;
+>>>>>>> upstream-next/master
 using Content.Shared.Item;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components; // Goobstation
@@ -50,6 +55,11 @@ using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Random; // Goobstation
 using Robust.Shared.Timing;
+<<<<<<< HEAD
+=======
+using Robust.Shared.Utility;
+
+>>>>>>> upstream-next/master
 namespace Content.Shared.Movement.Pulling.Systems;
 
 /// <summary>
@@ -69,6 +79,7 @@ public sealed class PullingSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly HeldSpeedModifierSystem _clothingMoveSpeed = default!;
+<<<<<<< HEAD
     [Dependency] private readonly SharedTransformSystem _xformSys = default!;
     [Dependency] private readonly ThrownItemSystem _thrownItem = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
@@ -81,6 +92,10 @@ public sealed class PullingSystem : EntitySystem
     [Dependency] private readonly SharedCombatModeSystem _combatMode = default!;
     [Dependency] private readonly ThrowingSystem _throwing = default!;
     [Dependency] private readonly ContestsSystem _contests = default!; // Goobstation - Grab Intent
+=======
+    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedVirtualItemSystem _virtual = default!;
+>>>>>>> upstream-next/master
 
     public override void Initialize()
     {
@@ -99,6 +114,10 @@ public sealed class PullingSystem : EntitySystem
         SubscribeLocalEvent<PullableComponent, UpdateCanMoveEvent>(OnGrabbedMoveAttempt); // Goobstation
         SubscribeLocalEvent<PullableComponent, SpeakAttemptEvent>(OnGrabbedSpeakAttempt); // Goobstation
 
+<<<<<<< HEAD
+=======
+        SubscribeLocalEvent<PullerComponent, UpdateMobStateEvent>(OnStateChanged, after: [typeof(MobThresholdSystem)]);
+>>>>>>> upstream-next/master
         SubscribeLocalEvent<PullerComponent, AfterAutoHandleStateEvent>(OnAfterState);
         SubscribeLocalEvent<PullerComponent, EntGotInsertedIntoContainerMessage>(OnPullerContainerInsert);
         SubscribeLocalEvent<PullerComponent, EntityUnpausedEvent>(OnPullerUnpaused);
@@ -109,6 +128,9 @@ public sealed class PullingSystem : EntitySystem
         SubscribeLocalEvent<PullerComponent, VirtualItemThrownEvent>(OnVirtualItemThrown); // Goobstation - Grab Intent
         SubscribeLocalEvent<PullerComponent, AddCuffDoAfterEvent>(OnAddCuffDoAfterEvent); // Goobstation - Grab Intent
 
+        SubscribeLocalEvent<HandsComponent, PullStartedMessage>(HandlePullStarted);
+        SubscribeLocalEvent<HandsComponent, PullStoppedMessage>(HandlePullStopped);
+
         SubscribeLocalEvent<PullableComponent, StrappedEvent>(OnBuckled);
         SubscribeLocalEvent<PullableComponent, BuckledEvent>(OnGotBuckled);
 
@@ -116,8 +138,48 @@ public sealed class PullingSystem : EntitySystem
             .Bind(ContentKeyFunctions.ReleasePulledObject, InputCmdHandler.FromDelegate(OnReleasePulledObject, handle: false))
             .Register<PullingSystem>();
     }
+<<<<<<< HEAD
     // Goobstation - Grab Intent
     private void OnAddCuffDoAfterEvent(Entity<PullerComponent> ent, ref AddCuffDoAfterEvent args)
+=======
+
+    private void HandlePullStarted(EntityUid uid, HandsComponent component, PullStartedMessage args)
+    {
+        if (args.PullerUid != uid)
+            return;
+
+        if (TryComp(args.PullerUid, out PullerComponent? pullerComp) && !pullerComp.NeedsHands)
+            return;
+
+        if (!_virtual.TrySpawnVirtualItemInHand(args.PulledUid, uid))
+        {
+            DebugTools.Assert("Unable to find available hand when starting pulling??");
+        }
+    }
+
+    private void HandlePullStopped(EntityUid uid, HandsComponent component, PullStoppedMessage args)
+    {
+        if (args.PullerUid != uid)
+            return;
+
+        // Try find hand that is doing this pull.
+        // and clear it.
+        foreach (var hand in component.Hands.Values)
+        {
+            if (hand.HeldEntity == null
+                || !TryComp(hand.HeldEntity, out VirtualItemComponent? virtualItem)
+                || virtualItem.BlockingEntity != args.PulledUid)
+            {
+                continue;
+            }
+
+            _handsSystem.TryDrop(args.PullerUid, hand, handsComp: component);
+            break;
+        }
+    }
+
+    private void OnStateChanged(EntityUid uid, PullerComponent component, ref UpdateMobStateEvent args)
+>>>>>>> upstream-next/master
     {
         if (args.Handled)
             return;
@@ -495,6 +557,16 @@ public sealed class PullingSystem : EntitySystem
     public bool IsPulling(EntityUid puller, PullerComponent? component = null)
     {
         return Resolve(puller, ref component, false) && component.Pulling != null;
+    }
+
+    public EntityUid? GetPuller(EntityUid puller, PullableComponent? component = null)
+    {
+        return !Resolve(puller, ref component, false) ? null : component.Puller;
+    }
+
+    public EntityUid? GetPulling(EntityUid puller, PullerComponent? component = null)
+    {
+        return !Resolve(puller, ref component, false) ? null : component.Pulling;
     }
 
     private void OnReleasePulledObject(ICommonSession? session)

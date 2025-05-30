@@ -37,7 +37,6 @@ namespace Content.Server.Hands.Systems
         [Dependency] private readonly IGameTiming _timing = default!;
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly StackSystem _stackSystem = default!;
-        [Dependency] private readonly VirtualItemSystem _virtualItemSystem = default!;
         [Dependency] private readonly ActionBlockerSystem _actionBlockerSystem = default!;
         [Dependency] private readonly SharedTransformSystem _transformSystem = default!;
         [Dependency] private readonly PullingSystem _pullingSystem = default!;
@@ -57,10 +56,7 @@ namespace Content.Server.Hands.Systems
         {
             base.Initialize();
 
-            SubscribeLocalEvent<HandsComponent, DisarmedEvent>(OnDisarmed, before: new[] {typeof(StunSystem), typeof(StaminaSystem)});
-
-            SubscribeLocalEvent<HandsComponent, PullStartedMessage>(HandlePullStarted);
-            SubscribeLocalEvent<HandsComponent, PullStoppedMessage>(HandlePullStopped);
+            SubscribeLocalEvent<HandsComponent, DisarmedEvent>(OnDisarmed, before: new[] {typeof(StunSystem), typeof(SharedStaminaSystem)});
 
             SubscribeLocalEvent<HandsComponent, BodyPartAddedEvent>(HandleBodyPartAdded);
             SubscribeLocalEvent<HandsComponent, BodyPartRemovedEvent>(HandleBodyPartRemoved);
@@ -105,7 +101,7 @@ namespace Content.Server.Hands.Systems
             }
         }
 
-        private void OnDisarmed(EntityUid uid, HandsComponent component, DisarmedEvent args)
+        private void OnDisarmed(EntityUid uid, HandsComponent component, ref DisarmedEvent args)
         {
             if (args.Handled)
                 return;
@@ -161,6 +157,7 @@ namespace Content.Server.Hands.Systems
             RemoveHand(uid, args.Slot);
         }
 
+<<<<<<< HEAD
         // start-_CorvaxNext: surgery
         private void HandleBodyPartEnabled(EntityUid uid, HandsComponent component, ref BodyPartEnabledEvent args) =>
             TryAddHand(uid, component, args.Part, SharedBodySystem.GetPartSlotContainerId(args.Part.Comp.ParentSlot?.Id ?? string.Empty));
@@ -216,6 +213,8 @@ namespace Content.Server.Hands.Systems
 
         #endregion
 
+=======
+>>>>>>> upstream-next/master
         #region interactions
 
         private bool HandleThrowItem(ICommonSession? playerSession, EntityCoordinates coordinates, EntityUid entity)
