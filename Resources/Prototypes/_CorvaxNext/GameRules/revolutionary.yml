@@ -1,0 +1,29 @@
+- type: entityTable
+  id: RevolutionaryMidroundEventsTable # 1984 events
+  table: !type:AllSelector
+  children:
+  - id: AnomalySpawn
+  - id: AnomalySpawn
+
+- type: entity
+  id: BalanceChanges
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    weight: 8
+    duration: 35
+  - type: ChangeAccountsBalanceRule
+    accountsBalanceChanges:
+      Cargo: 0.3
+      Science: 0.3
+      Security: -0.3
+
+- type: entity
+  id: RevolutionaryMassFaxTest
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    weight: 8
+    duration: 35
+  - type: MassSendFaxRule
+    docText: Вам всем пиздец
